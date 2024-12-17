@@ -2,6 +2,7 @@
 layout: post
 title: "The missing findM and collectFirstM methods in cats.Foldable"
 author: Henry
+category: Scala
 tags:
   - Scala
   - Cats
@@ -11,6 +12,11 @@ tags:
   - foldM
   - short-circuit
 ---
+
+### Update (2024)
+
+Shortly after I wrote this article, both methods were added to the `cats.Foldable` type class.
+See the [Scaladoc](https://typelevel.org/cats/api/cats/Foldable.html).
 
 ### Take me to the code
 
@@ -24,8 +30,8 @@ library provides [find](https://www.scala-lang.org/api/2.12.6/scala/collection/i
 Additionally, if you rather want to get the first item for which a function is defined, there's
 [collectFirst](https://www.scala-lang.org/api/2.12.6/scala/collection/immutable/List.html#collectFirst[B](pf:PartialFunction[A,B]):Option[B]).
 
-Now, dealing with effectful types (Scala futures and Monix tasks in my case), I was expecting Cats to 
-provide similar methods in a monadic context. Sadly, they don't exist. If you're using Scalaz, it seems 
+Now, dealing with effectful types (Scala futures and Monix tasks in my case), I was expecting Cats to
+provide similar methods in a monadic context. Sadly, they don't exist. If you're using Scalaz, it seems
 that you're at least partially covered: `findM` is provided.
 
 ## Setup
@@ -183,7 +189,7 @@ Its signature and the associated Scaladoc is telling us everything we need:
 
 ```scala
 /**
-   * Keeps calling `f` until a `scala.util.Right[B]` is returned. (...)   
+   * Keeps calling `f` until a `scala.util.Right[B]` is returned. (...)
    */
 def tailRecM[A, B](a: A)(f: A => F[Either[A, B]]): F[B]
 ```
@@ -218,13 +224,15 @@ def collectFirstM[G[_], A, B](list: List[A], pf: A => G[Option[B]])
 
 ## Foldable#foldM
 
-After searching the Cats Gitter channel, I found out that a more powerful and generic way would be to use `foldM`. While a bit scarce on details, the Scaladoc mentions short-circuiting ability. Unfortunately its 
+After searching the Cats Gitter channel, I found out that a more powerful and generic way would be to use `foldM`.
+While a bit scarce on details, the Scaladoc mentions short-circuiting ability. Unfortunately its
 implementation isn't of much help, and old messages on Gitter were pointing to the `Foldable` test suite
 for inspiration.
 
 There are several examples, but the common idea is to perform a monadic fold within a *fail-fast* data type
-and take advantage of the failure to signal that we're done. Given that we do need to store the result 
-somewhere, a logical choice is to use `Either`. There's a good example on [line 287](https://github.com/typelevel/cats/blob/master/tests/src/test/scala/cats/tests/FoldableSuite.scala#L287):
+and take advantage of the failure to signal that we're done. Given that we do need to store the result
+somewhere, a logical choice is to use `Either`. There's a good example in
+[the test suite](https://github.com/typelevel/cats/blob/c35bc68cbdf0e722005a853ab7a884daf065add3/tests/shared/src/test/scala/cats/tests/FoldableSuite.scala#L660):
 
 ```scala
 implicit val F = foldableStreamWithDefaultImpl
