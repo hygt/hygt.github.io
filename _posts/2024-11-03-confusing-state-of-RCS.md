@@ -132,6 +132,8 @@ I completely forgot to mention another consequence of Googleâ€™s policy: thereâ€
 
 On the iOS front, more European carriers have announced the feature would be enabled soon or early next year. The roll-out still looks confusing though, if I take France as example again, both Bouygues and Free have it enabled in the current iOS beta, while Orange communicated about RCS availability coming during the first half of 2025.
 
+---
+
 [^1]: https://www.wired.com/2017/02/google-support-for-rcs/
 
 [^2]: https://www.theverge.com/2019/6/17/18681573/google-rcs-chat-android-texting-carriers-imessage-encryption

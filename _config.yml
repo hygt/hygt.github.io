@@ -1,4 +1,19 @@
-theme: minima
-author: Henry
-title: Henry's blog
-description: Observations about programming in Scala
+# Dependencies
+markdown: redcarpet
+highlighter: pygments
+
+# Permalinks
+permalink: pretty
+relative_permalinks: true
+
+# Setup
+title: "Henry's blog"
+description: "Observations about Scala and other things"
+url: https://hygt.github.io
+baseurl: /
+
+author:
+  name: "Henry Genet"
+  url: https://bsky.app/profile/hygt.bsky.social
+
+paginate: 5
